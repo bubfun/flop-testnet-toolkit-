@@ -1,0 +1,11 @@
+# never commit identities, secrets, or local state
+*.key
+*.pem
+id_ed25519*
+keys.jsonl
+.env
+.env.*
+__pycache__/
+*.pyc
+state/
+*.log

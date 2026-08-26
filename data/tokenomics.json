@@ -1,0 +1,40 @@
+{
+  "_source": "flop.finance/teaser (v0.1 draft, provisional) + @flop_labs status 2092626441339043871, captured 2026-08-26. Final numbers pending the Yellow Paper + the @CryptoHayes AMA (~early Sep 2026).",
+  "_disclaimer": "All figures are provisional and subject to change. Do not treat as financial advice.",
+  "total_supply_year10": 17200000000,
+  "supply_allocation": {
+    "miners":            {"tokens": 8800000000, "pct": 51.2, "note": "block rewards proportional to compute + 85% of every inference fee, liquid, no lockup"},
+    "airdrop":           {"tokens": 3500000000, "pct": 20.4, "note": "genesis, via testnet participation"},
+    "team_foundation":   {"tokens": 2000000000, "pct": 11.4},
+    "brokers_agents":    {"tokens": 1200000000, "pct": 6.8, "note": "demand-side compute subsidy"},
+    "validators":        {"tokens": 1200000000, "pct": 6.8},
+    "staking_rewards":   {"tokens": 600000000,  "pct": 3.4}
+  },
+  "genesis_airdrop": {
+    "total": 3500000000,
+    "buckets": {
+      "miners":    {"max_tokens": 1200000000, "pct_supply": 7.0, "basis": "compute DELIVERED over the ~90-day testnet"},
+      "agents":    {"max_tokens": 1200000000, "pct_supply": 7.0, "basis": "compute CONSUMED", "rule": "every 3 testnet-$FLOP spent on inference unlocks 1 airdropped $FLOP"},
+      "validators":{"max_tokens": 305500000,  "pct_supply": 1.8, "basis": "stake for mainnet validator set; locked through first halving, released over the following 1000 days"},
+      "reserve":   {"max_tokens": 794500000,  "pct_supply": 4.6, "basis": "ecosystem growth / incentives"}
+    }
+  },
+  "network": {
+    "consensus": "Proof-of-Useful-Inference (PoUI)",
+    "verification": ["TEE hardware attestation", "TOPLOC work-certificate fingerprinting", "randomized validator re-execution sampling", "slashing"],
+    "block_time_s": 1,
+    "block_reward_flop": 96,
+    "halving_days": 730,
+    "halvings_before_constant": 5
+  },
+  "hardware": {
+    "miner": {"gpu_vram_gb_min": 16, "accepted": ["GB300 NVL72","B300","GB200 NVL72","B200","H200","H100","A100","consumer GPU >=16GB VRAM"]},
+    "validator": {"cpu_cores_min": 8, "ram_gb_min": 64, "nvme_tb_min": 2, "network": "1Gbps redundant", "set_cap": 1000, "monthly_churn": "worst 50 replaced by top 50 in waiting on uptime/availability"}
+  },
+  "timeline": {
+    "testnet": "Q4 2026 (~90 days)",
+    "mainnet": "Q1 2027",
+    "ama": "@CryptoHayes on X Spaces / YouTube, ~early Sep 2026 (final Yellow Paper)"
+  },
+  "agent_inference_session_fields": ["model_weights_hash", "max_latency", "flops_needed", "confidentiality_preference", "fee"]
+}
