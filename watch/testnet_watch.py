@@ -71,7 +71,10 @@ def main() -> int:
     hits = 0
     for url in FAUCET_PROBES:
         code, _ = _get(url)
-        if code is not None and code != 404:
+        # Only a real success counts. 5xx (502/503) means the origin is DOWN, not
+        # that the endpoint went live — technocore sits behind Cloudflare and 503s
+        # every dynamic path during an outage, which would otherwise false-alarm.
+        if code is not None and 200 <= code < 300:
             alert(f"faucet:{url}:{code}", f"FAUCET/CLAIM endpoint live: {url} -> HTTP {code}")
             hits += 1
     for url, kws in KEYWORDS_PAGES.items():
