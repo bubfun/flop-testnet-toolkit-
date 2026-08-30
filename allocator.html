@@ -1,0 +1,282 @@
+<meta charset="utf-8">
+<title>Allocator</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Inter:wght@400;500;600&display=swap">
+<style>
+  :root{
+    --base:#0A1128; --ice:#F5F7FA; --grey:#5C6670; --blue:#0466C8;
+    --chip:#00B4D8; --green:#32D74B;
+    --ground:var(--base); --ink:var(--ice); --muted:#8b95a8;
+    --line:rgba(245,247,250,.12); --panel:#0e1734; --panel-2:#111d40;
+    --mono:'Space Mono',ui-monospace,Menlo,monospace;
+    --sans:'Inter',system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--ground);color:var(--ink);font-family:var(--sans);
+       font-size:16px;line-height:1.55;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+  .wrap{max-width:1080px;margin:0 auto;padding:0 22px}
+  a{color:var(--chip);text-decoration:none;border-bottom:1px solid rgba(0,180,216,.35)}
+  h1,h2,h3{font-family:var(--mono);font-weight:700;margin:0;text-wrap:balance}
+  .mono{font-family:var(--mono)} .muted{color:var(--muted)}
+  .tnum{font-variant-numeric:tabular-nums}
+
+  /* header */
+  header{display:flex;align-items:center;justify-content:space-between;gap:16px;
+         padding:22px 0;border-bottom:1px solid var(--line);flex-wrap:wrap}
+  .brand{display:flex;align-items:center;gap:13px}
+  .brand svg{width:34px;height:34px;flex:0 0 auto}
+  .brand .nm{font-family:var(--mono);font-weight:700;font-size:19px;letter-spacing:.01em}
+  .brand .sub{font-family:var(--mono);font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--chip)}
+  .maker{font-family:var(--mono);font-size:11px;letter-spacing:.06em;color:var(--grey)}
+  .maker b{color:var(--muted);font-weight:400}
+
+  /* hero readout */
+  .hero{padding:40px 0 30px;display:grid;grid-template-columns:1.15fr .85fr;gap:30px;align-items:center}
+  .readout .eyebrow{font-family:var(--mono);font-size:12px;letter-spacing:.2em;text-transform:uppercase;color:var(--muted);margin-bottom:10px}
+  .bignum{font-family:var(--mono);font-weight:700;font-size:clamp(44px,8.5vw,84px);line-height:.95;letter-spacing:-.02em;color:var(--ink)}
+  .bignum .unit{color:var(--chip);font-size:.42em;letter-spacing:.02em;margin-left:.15em}
+  .subline{margin-top:14px;display:flex;gap:22px;flex-wrap:wrap;font-family:var(--mono);font-size:14px;color:var(--muted)}
+  .subline b{color:var(--ink);font-weight:700}
+  .subline .g{color:var(--green)}
+  .hero-note{background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:20px 22px}
+  .hero-note h3{font-size:14px;color:var(--chip);letter-spacing:.02em;margin-bottom:8px}
+  .hero-note p{margin:0;font-size:14px;color:var(--muted)}
+  .hero-note .verdict{color:var(--ink);font-weight:600}
+
+  /* split bar */
+  .splitbar{display:flex;height:16px;border-radius:5px;overflow:hidden;margin:6px 0 4px;border:1px solid var(--line)}
+  .splitbar span{display:block;height:100%}
+  .legend{display:flex;gap:18px;flex-wrap:wrap;font-family:var(--mono);font-size:11px;color:var(--muted);letter-spacing:.04em}
+  .legend i{display:inline-block;width:10px;height:10px;border-radius:2px;margin-right:6px;vertical-align:-1px}
+
+  section{padding:34px 0;border-top:1px solid var(--line)}
+  .sec-h{font-size:13px;font-family:var(--mono);letter-spacing:.18em;text-transform:uppercase;color:var(--chip);margin-bottom:20px}
+
+  /* lanes */
+  .lanes{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+  .lane{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:22px;display:flex;flex-direction:column;gap:14px}
+  .lane.best{border-color:rgba(0,180,216,.5);box-shadow:0 0 0 1px rgba(0,180,216,.15),0 8px 30px rgba(0,180,216,.06)}
+  .lane .lh{display:flex;align-items:baseline;justify-content:space-between;gap:10px}
+  .lane .lname{font-family:var(--mono);font-weight:700;font-size:16px}
+  .lane .tag{font-family:var(--mono);font-size:10px;letter-spacing:.12em;text-transform:uppercase;padding:3px 8px;border-radius:999px;border:1px solid var(--line);color:var(--muted)}
+  .lane.best .tag{color:var(--chip);border-color:rgba(0,180,216,.45)}
+  .lane .basis{font-size:13px;color:var(--muted);margin-top:-4px}
+  .ctl label{display:flex;justify-content:space-between;font-family:var(--mono);font-size:12px;color:var(--muted);margin-bottom:8px;letter-spacing:.02em}
+  .ctl label .val{color:var(--ink);font-weight:700}
+  input[type=range]{-webkit-appearance:none;appearance:none;width:100%;height:5px;border-radius:5px;background:#1b2a52;outline:none}
+  input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:18px;height:18px;border-radius:50%;background:var(--chip);cursor:pointer;border:3px solid #06132e;box-shadow:0 0 0 1px var(--chip)}
+  input[type=range]::-moz-range-thumb{width:18px;height:18px;border-radius:50%;background:var(--chip);cursor:pointer;border:3px solid #06132e}
+  input[type=range]:focus-visible{outline:2px solid var(--chip);outline-offset:4px}
+  .lane .out{margin-top:auto;padding-top:12px;border-top:1px solid var(--line)}
+  .lane .out .flop{font-family:var(--mono);font-weight:700;font-size:26px;letter-spacing:-.01em}
+  .lane .out .flop .u{color:var(--chip);font-size:.5em;margin-left:.2em}
+  .lane .out .meta{font-family:var(--mono);font-size:11.5px;color:var(--muted);margin-top:4px}
+
+  /* assumptions row */
+  .assume{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-top:22px}
+  .assume .box{background:var(--panel-2);border:1px solid var(--line);border-radius:10px;padding:18px 20px}
+  .assume .box .k{font-family:var(--mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+  .assume .box .row{display:flex;align-items:center;gap:12px;margin-top:12px}
+  .assume input[type=number]{background:#06132e;border:1px solid var(--line);color:var(--ink);font-family:var(--mono);font-weight:700;
+      font-size:16px;border-radius:7px;padding:8px 11px;width:120px}
+  .assume input[type=number]:focus{outline:2px solid var(--chip);outline-offset:1px}
+  .assume .hint{font-size:12.5px;color:var(--muted);margin-top:10px;line-height:1.45}
+
+  /* reality check */
+  .reality{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+  .rc{background:var(--panel);border:1px solid var(--line);border-radius:9px;padding:18px 20px}
+  .rc .k{font-family:var(--mono);font-weight:700;font-size:13px;color:var(--ink);margin-bottom:6px}
+  .rc p{margin:0;font-size:13.5px;color:var(--muted);line-height:1.5}
+
+  footer{padding:30px 0 70px;border-top:1px solid var(--line);color:var(--grey);font-size:12.5px}
+  footer .mono{font-size:11px;letter-spacing:.04em}
+
+  @media(max-width:820px){
+    .hero{grid-template-columns:1fr}
+    .lanes,.reality{grid-template-columns:1fr}
+    .assume{grid-template-columns:1fr}
+  }
+</style>
+
+<div class="wrap">
+  <header>
+    <div class="brand">
+      <svg viewBox="0 0 700 700" aria-hidden="true" id="chip"></svg>
+      <div>
+        <div class="nm">Allocator</div>
+        <div class="sub">FLOP airdrop estimator</div>
+      </div>
+    </div>
+    <div class="maker">unofficial · built by <b>@bub_fun</b></div>
+  </header>
+
+  <div class="hero">
+    <div class="readout">
+      <div class="eyebrow">Your projected genesis airdrop</div>
+      <div class="bignum tnum"><span id="total">0</span><span class="unit">$FLOP</span></div>
+      <div class="subline">
+        <span><b id="pctsupply" class="tnum">0%</b> of total supply</span>
+        <span>≈ <b class="g tnum" id="usd">$0</b> at your price</span>
+      </div>
+      <div style="margin-top:22px">
+        <div class="splitbar" id="splitbar" aria-hidden="true"></div>
+        <div class="legend">
+          <span><i style="background:var(--chip)"></i>your capture</span>
+          <span><i style="background:#22345f"></i>miners 1.2bn</span>
+          <span><i style="background:#1c2c53"></i>agents 1.2bn</span>
+          <span><i style="background:#182548"></i>validators 306m</span>
+          <span><i style="background:#12203f"></i>reserve 795m</span>
+        </div>
+      </div>
+    </div>
+    <div class="hero-note">
+      <h3>Read this first</h3>
+      <p>The airdrop is a <span class="verdict">proportional split</span>, not a fixed payout. What you get is your slice of each lane's testnet activity. Move the sliders to <span class="verdict">your realistic share</span> — a single participant is usually a fraction of a percent. Total genesis airdrop: <b class="verdict">3.5bn $FLOP</b> of 17.2bn.</p>
+    </div>
+  </div>
+
+  <section>
+    <div class="sec-h">Your participation — set your share of each lane</div>
+    <div class="lanes">
+      <div class="lane best" id="lane-miner">
+        <div class="lh"><span class="lname">Miner</span><span class="tag">highest EV</span></div>
+        <div class="basis">Compute <b>delivered</b>. Also 51% of long-term supply + 85% of every fee.</div>
+        <div class="ctl">
+          <label>Your share of testnet compute <span class="val"><span id="s-miner">0.50</span>%</span></label>
+          <input type="range" id="r-miner" min="0" max="5" step="0.01" value="0.5">
+        </div>
+        <div class="out"><div class="flop tnum"><span id="o-miner">0</span><span class="u">$FLOP</span></div><div class="meta">of the 1.2bn miner bucket</div></div>
+      </div>
+
+      <div class="lane" id="lane-agent">
+        <div class="lh"><span class="lname">Agent</span><span class="tag">spend to earn</span></div>
+        <div class="basis">Compute <b>consumed</b>. 3 testnet-$FLOP spent → 1 airdropped.</div>
+        <div class="ctl">
+          <label>Your share of agent inference spend <span class="val"><span id="s-agent">0.50</span>%</span></label>
+          <input type="range" id="r-agent" min="0" max="5" step="0.01" value="0.5">
+        </div>
+        <div class="out"><div class="flop tnum"><span id="o-agent">0</span><span class="u">$FLOP</span></div><div class="meta">spend needed ≈ <span id="spend" class="tnum">0</span> testnet-$FLOP</div></div>
+      </div>
+
+      <div class="lane" id="lane-val">
+        <div class="lh"><span class="lname">Validator</span><span class="tag">locked</span></div>
+        <div class="basis">Stake for the 1,000-set. Locked through the first halving.</div>
+        <div class="ctl">
+          <label>Your share of the validator set <span class="val"><span id="s-val">0.10</span>%</span></label>
+          <input type="range" id="r-val" min="0" max="5" step="0.01" value="0.1">
+        </div>
+        <div class="out"><div class="flop tnum"><span id="o-val">0</span><span class="u">$FLOP</span></div><div class="meta">of the 305.5m validator bucket</div></div>
+      </div>
+    </div>
+
+    <div class="assume">
+      <div class="box">
+        <div class="k">$FLOP price assumption</div>
+        <div class="row"><span class="mono muted">$</span><input type="number" id="price" value="0.05" min="0" step="0.01"><span class="mono muted">per $FLOP</span></div>
+        <div class="hint">No market exists yet — this is your own guess, used only for the USD line. Mainnet is Q1 2027.</div>
+      </div>
+      <div class="box">
+        <div class="k">What "share" means</div>
+        <div class="hint" style="margin-top:12px">If 200 serious miners split the testnet evenly, each holds ~0.5%. Running more/bigger GPUs raises your share; the lane is a race for a fixed pie. Same logic for agents (by spend) and validators (by stake &amp; uptime).</div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="sec-h">The verdict</div>
+    <div class="hero-note" style="background:var(--panel-2)">
+      <p id="verdict-text" class="muted">—</p>
+    </div>
+  </section>
+
+  <section>
+    <div class="sec-h">Reality check</div>
+    <div class="reality">
+      <div class="rc"><div class="k">It's proportional</div><p>Every number scales with total network participation, which nobody knows yet. Treat these as your <i>share</i> of a bucket, not a promise.</p></div>
+      <div class="rc"><div class="k">Miner ≠ just the airdrop</div><p>The miner lane is the biggest airdrop bucket <i>and</i> the majority of long-term supply <i>and</i> 85% of every inference fee. Its real value dwarfs the genesis slice.</p></div>
+      <div class="rc"><div class="k">Figures are provisional</div><p>From flop.finance/teaser, labelled v0.1 draft. The Yellow Paper + Arthur Hayes' AMA can move every number. Not financial advice.</p></div>
+    </div>
+  </section>
+
+  <footer>
+    <p><span class="mono">ALLOCATOR</span> — a community estimator, not affiliated with Flop Labs. Tokenomics from <a href="https://flop.finance/teaser/">flop.finance/teaser</a> (provisional). Built by <a href="https://x.com/bub__fun">@bub_fun</a>. Nothing you type leaves your browser.</p>
+  </footer>
+</div>
+
+<script>
+(function(){
+  // ---- the Chip, our signature mark ----
+  (function(){
+    var CELL=100,GUT=.10,RX=7,N=7,C=3,B=CELL*(1-GUT),I=(CELL-B)/2,s='';
+    for(var r=0;r<N;r++)for(var c=0;c<N;c++){
+      if(Math.min(r,N-1-r)+Math.min(c,N-1-c)<2)continue; if(r===C&&c===C)continue;
+      s+='<rect x="'+(c*CELL+I).toFixed(1)+'" y="'+(r*CELL+I).toFixed(1)+'" width="'+B.toFixed(1)+'" height="'+B.toFixed(1)+'" rx="'+RX+'" fill="#00B4D8"/>';
+    }
+    document.getElementById('chip').innerHTML=s;
+  })();
+
+  var MINER=1.2e9, AGENT=1.2e9, VAL=305.5e6, SUPPLY=17.2e9;
+  var $=function(id){return document.getElementById(id)};
+
+  function fmt(n){
+    n=Math.round(n);
+    if(n>=1e9) return (n/1e9).toFixed(2).replace(/\.?0+$/,'')+'bn';
+    if(n>=1e6) return (n/1e6).toFixed(2).replace(/\.?0+$/,'')+'M';
+    if(n>=1e3) return (n/1e3).toFixed(1).replace(/\.0$/,'')+'k';
+    return String(n);
+  }
+  function fmtUsd(n){
+    if(n>=1e6) return '$'+(n/1e6).toFixed(2).replace(/\.?0+$/,'')+'M';
+    if(n>=1e3) return '$'+(n/1e3).toFixed(1).replace(/\.0$/,'')+'k';
+    return '$'+n.toFixed(0);
+  }
+
+  function calc(){
+    var ms=+$('r-miner').value, as=+$('r-agent').value, vs=+$('r-val').value, price=+$('price').value||0;
+    $('s-miner').textContent=ms.toFixed(2); $('s-agent').textContent=as.toFixed(2); $('s-val').textContent=vs.toFixed(2);
+
+    var mFlop=ms/100*MINER, aFlop=as/100*AGENT, vFlop=vs/100*VAL;
+    var total=mFlop+aFlop+vFlop;
+
+    $('o-miner').textContent=fmt(mFlop);
+    $('o-agent').textContent=fmt(aFlop);
+    $('o-val').textContent=fmt(vFlop);
+    $('spend').textContent=fmt(aFlop*3);
+    $('total').textContent=fmt(total);
+    $('pctsupply').textContent=(total/SUPPLY*100).toFixed(total/SUPPLY*100<0.1?3:2)+'%';
+    $('usd').textContent=fmtUsd(total*price);
+
+    // split bar: your capture vs the four buckets (log-ish visual weighting kept linear on the 3.5bn base)
+    var GEN=3.5e9;
+    var yours=total, rem=Math.max(0,GEN-yours);
+    var parts=[
+      ['var(--chip)', yours],
+      ['#22345f', MINER*(1-Math.min(1,ms/100))*0.34],
+      ['#1c2c53', AGENT*(1-Math.min(1,as/100))*0.34],
+      ['#182548', VAL*0.34],
+      ['#12203f', 794.5e6*0.34]
+    ];
+    var sum=parts.reduce(function(a,p){return a+p[1]},0);
+    $('splitbar').innerHTML=parts.map(function(p){return '<span style="width:'+(p[1]/sum*100).toFixed(2)+'%;background:'+p[0]+'"></span>'}).join('');
+
+    // verdict
+    var best = mFlop>=aFlop&&mFlop>=vFlop ? 'miner' : (aFlop>=vFlop?'agent':'validator');
+    var lanes={miner:'Miner',agent:'Agent',validator:'Validator'};
+    var v='At these shares your biggest slice comes from the <b class="verdict">'+lanes[best]+'</b> lane — '+fmt(Math.max(mFlop,aFlop,vFlop))+' $FLOP. ';
+    if(best!=='miner'){
+      v+='But note the <b class="verdict">Miner</b> lane is the only one that also pays 85% of every inference fee and the bulk of long-term supply, so equal effort there compounds far beyond this genesis number. ';
+    } else {
+      v+='That tracks — miner is the single richest surface in FLOP (biggest bucket + 51% of supply + the fee stream). ';
+    }
+    v+='To lift any lane, take a bigger share of its testnet activity: more GPU for mining, more faucet spent on inference for agents, more stake and uptime for validators.';
+    $('verdict-text').innerHTML=v;
+  }
+
+  ['r-miner','r-agent','r-val','price'].forEach(function(id){
+    $(id).addEventListener('input',calc);
+  });
+  calc();
+})();
+</script>
