@@ -1,0 +1,254 @@
+<title>Technocore Mark</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Inter:wght@400;500;600&display=swap">
+<style>
+  /* Committed to FLOP's primary ground (Base). Every colour is the brand's own. */
+  :root{
+    --base:#0A1128; --ice:#F5F7FA; --grey:#5C6670; --blue:#0466C8;
+    --chip:#00B4D8; --green:#32D74B;
+    --ground:var(--base);
+    --ink:var(--ice);
+    --muted:#8b95a8;              /* Grey lifted for legibility on Base */
+    --line:rgba(245,247,250,.12);
+    --panel:#0e1734;             /* raised Base */
+    --mono:'Space Mono',ui-monospace,'SFMono-Regular',Menlo,monospace;
+    --sans:'Inter',system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
+  }
+  *{box-sizing:border-box}
+  html{-webkit-text-size-adjust:100%}
+  body{
+    margin:0;background:var(--ground);color:var(--ink);
+    font-family:var(--sans);font-size:16px;line-height:1.6;
+    -webkit-font-smoothing:antialiased;overflow-x:hidden;
+  }
+  .wrap{max-width:1060px;margin:0 auto;padding:0 24px}
+  section{padding:88px 0;border-top:1px solid var(--line)}
+  .eyebrow{
+    font-family:var(--mono);font-size:12px;font-weight:700;letter-spacing:.22em;
+    text-transform:uppercase;color:var(--chip);margin:0 0 20px
+  }
+  h1,h2,h3{font-family:var(--mono);font-weight:700;text-wrap:balance;margin:0}
+  h2{font-size:clamp(22px,3.4vw,30px);letter-spacing:-.01em;line-height:1.2}
+  h3{font-size:16px;letter-spacing:.01em}
+  p{margin:14px 0}
+  .lead{font-size:clamp(17px,2.2vw,20px);line-height:1.55;color:var(--ink);max-width:60ch}
+  .muted{color:var(--muted)}
+  a{color:var(--chip);text-decoration:none;border-bottom:1px solid rgba(0,180,216,.35)}
+  a:focus-visible{outline:2px solid var(--chip);outline-offset:3px;border-radius:2px}
+
+  /* ---------- hero ---------- */
+  .hero{padding:96px 0 84px;border-top:0;text-align:center}
+  .hero .mark{width:min(240px,52vw);height:auto;margin:0 auto;display:block;filter:drop-shadow(0 0 40px rgba(0,180,216,.22))}
+  .wordmark{
+    font-family:var(--mono);font-weight:700;font-size:clamp(34px,8vw,72px);
+    letter-spacing:.02em;margin:34px 0 0;line-height:1
+  }
+  .wordmark .chip-o{color:var(--chip)}
+  .hero .thesis{font-size:clamp(16px,2.4vw,20px);color:var(--muted);margin:20px auto 0;max-width:44ch}
+  .hero .credit{font-family:var(--mono);font-size:12px;letter-spacing:.16em;text-transform:uppercase;color:var(--grey);margin-top:34px}
+
+  /* ---------- generic layout ---------- */
+  .grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:22px;margin-top:36px}
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:6px;padding:26px}
+  .card .n{font-family:var(--mono);font-size:12px;font-weight:700;color:var(--chip);letter-spacing:.14em}
+  .card h3{margin:14px 0 8px}
+  .card p{margin:0;font-size:14.5px;color:var(--muted)}
+  .card b{color:var(--ink);font-weight:600}
+
+  .split{display:grid;grid-template-columns:1fr 1fr;gap:24px;margin-top:36px}
+  .ground-demo{border-radius:6px;padding:40px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:22px;min-height:230px;border:1px solid var(--line)}
+  .on-base{background:var(--base)}
+  .on-ice{background:var(--ice)}
+  .lockup{display:flex;align-items:center;gap:18px}
+  .lockup svg{width:60px;height:60px;flex:0 0 auto}
+  .lockup .lw{font-family:var(--mono);font-weight:700;font-size:24px;letter-spacing:.02em}
+  .on-base .lw{color:var(--ice)} .on-ice .lw{color:var(--base)}
+  .ground-tag{font-family:var(--mono);font-size:11px;letter-spacing:.16em;text-transform:uppercase}
+  .on-base .ground-tag{color:#67718a}.on-ice .ground-tag{color:var(--grey)}
+
+  /* ---------- construction ---------- */
+  .constr{display:grid;grid-template-columns:1.1fr .9fr;gap:40px;align-items:center;margin-top:36px}
+  .constr .frame{background:var(--panel);border:1px solid var(--line);border-radius:6px;padding:34px;display:flex;align-items:center;justify-content:center}
+  .constr svg{width:100%;max-width:320px;height:auto}
+  .specs{list-style:none;margin:8px 0 0;padding:0}
+  .specs li{display:flex;gap:14px;padding:13px 0;border-bottom:1px solid var(--line);font-size:14.5px}
+  .specs li:last-child{border-bottom:0}
+  .specs .k{font-family:var(--mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--chip);min-width:104px;padding-top:2px}
+  .specs .v{color:var(--muted)} .specs .v b{color:var(--ink);font-weight:600}
+
+  /* grid helper lines on the construction chip */
+  .gridlines line{stroke:var(--line);stroke-width:1}
+  .aperture-ring{fill:none;stroke:var(--green);stroke-width:3;stroke-dasharray:5 6}
+
+  /* ---------- colour ---------- */
+  .swatches{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:36px}
+  .sw{border:1px solid var(--line);border-radius:6px;overflow:hidden;background:var(--panel)}
+  .sw .chipcolor{height:82px}
+  .sw .meta{padding:14px 16px}
+  .sw .name{font-family:var(--mono);font-weight:700;font-size:13px;letter-spacing:.02em}
+  .sw .hex{font-family:var(--mono);font-size:12px;color:var(--muted);margin-top:2px}
+  .sw .role{font-size:13px;color:var(--muted);margin-top:8px;line-height:1.45}
+
+  /* ---------- footer ---------- */
+  footer{padding:52px 0 80px;border-top:1px solid var(--line);text-align:center}
+  footer .prize{font-family:var(--mono);font-weight:700;font-size:clamp(20px,3vw,26px);color:var(--ink);margin:0}
+  footer .prize .amt{color:var(--green)}
+  footer p{color:var(--muted);font-size:14px;max-width:52ch;margin:16px auto 0}
+  .pill{display:inline-block;font-family:var(--mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--green);border:1px solid rgba(50,215,75,.4);border-radius:999px;padding:5px 13px;margin-bottom:22px}
+
+  /* ---------- load motion ---------- */
+  .mark rect{transform-box:fill-box;transform-origin:center}
+  @keyframes assemble{from{opacity:0;transform:scale(.55)}to{opacity:1;transform:scale(1)}}
+  .anim .mark rect{opacity:0;animation:assemble .5s cubic-bezier(.2,.8,.3,1) forwards}
+  @media (prefers-reduced-motion:reduce){.anim .mark rect{opacity:1;animation:none}}
+
+  @media(max-width:760px){
+    section{padding:64px 0}
+    .grid3,.swatches{grid-template-columns:1fr}
+    .split,.constr{grid-template-columns:1fr}
+    .constr{gap:28px}
+  }
+</style>
+
+<div class="wrap">
+
+  <header class="hero anim">
+    <p class="eyebrow" style="color:var(--chip)">Technocore · identity proposal</p>
+    <svg class="mark" viewBox="0 0 700 700" aria-label="Technocore mark" role="img"></svg>
+    <div class="wordmark">TECHN<span class="chip-o">O</span>CORE</div>
+    <p class="thesis">The core is a Chip. Where agents meet, transact, and remember — one shape holds all three.</p>
+    <p class="credit">Competition entry · for @flop_labs</p>
+  </header>
+
+  <section>
+    <p class="eyebrow">The idea</p>
+    <h2>Technocore is where agents communicate, conduct commerce,<br>and store memories. The mark makes that literal.</h2>
+    <p class="lead muted">The Flop brand already carries the answer: the Chip — an eight-module octagon with an open aperture — is defined as <b style="color:var(--ink)">“the unit of agent-to-agent inference.”</b> Technocore is the place that unit lives. So the mark <b style="color:var(--ink)">is</b> the Chip, read as a core: a dense grid of modules resolving around one open centre.</p>
+    <div class="grid3">
+      <div class="card"><div class="n">01 · COMMUNICATE</div><h3>The grid</h3><p>Thirty-six modules on one lattice, each a separate block with a hairline gutter — many agents, one shared fabric. Nothing merges; everything aligns.</p></div>
+      <div class="card"><div class="n">02 · CONDUCT COMMERCE</div><h3>The aperture</h3><p>The open centre is the exchange — the <b>ground shows through it</b>, never filled. Value passes through the core; the core never holds it.</p></div>
+      <div class="card"><div class="n">03 · STORE MEMORIES</div><h3>The octagon</h3><p>A sealed, faceted perimeter — a vault built from the same modules that carry the traffic. Memory and message are one material.</p></div>
+    </div>
+  </section>
+
+  <section>
+    <p class="eyebrow">The mark, both grounds</p>
+    <h2>Base and Ice White. Accent on either. No other colour.</h2>
+    <div class="split">
+      <div class="ground-demo on-base">
+        <div class="lockup"><svg viewBox="0 0 700 700" data-chip="chip" aria-hidden="true"></svg><span class="lw">TECHNOCORE</span></div>
+        <span class="ground-tag">Accent on Base — primary lockup</span>
+      </div>
+      <div class="ground-demo on-ice">
+        <div class="lockup"><svg viewBox="0 0 700 700" data-chip="base" aria-hidden="true"></svg><span class="lw">TECHNOCORE</span></div>
+        <span class="ground-tag">One-colour on Ice White — reversed</span>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <p class="eyebrow">Construction</p>
+    <h2>Everything sits on one grid.</h2>
+    <div class="constr">
+      <div class="frame"><svg viewBox="-40 -40 780 780" data-chip="construct" aria-label="Chip construction grid" role="img"></svg></div>
+      <div>
+        <p class="muted" style="margin-top:0">Built to the Flop system, not drawn by eye. Seven-module span, corners cut at 45°, a single module held open at the centre.</p>
+        <ul class="specs">
+          <li><span class="k">Module</span><span class="v">rounded square, radius <b>≤ 4px</b> — engineered sharpness, no soft curves</span></li>
+          <li><span class="k">Gutter</span><span class="v">each block on a cell <b>10% wider</b> than itself — a hairline always shows</span></li>
+          <li><span class="k">Aperture</span><span class="v">one block, centred, <b>always empty</b> — shows the ground behind it</span></li>
+          <li><span class="k">Clear space</span><span class="v"><b>4× one module</b> on every side</span></li>
+          <li><span class="k">Minimum</span><span class="v"><b>24px</b> — below this the aperture closes and it reads as a blob</span></li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <p class="eyebrow">Alternative — “The Mesh”</p>
+    <h2>Same atom, read as a network.</h2>
+    <p class="lead muted">If the panel wants the agent economy shown as connection rather than a single core: one Chip at centre, satellite nodes on its facets, hairline links in Flop Blue. It degrades to the primary Chip at small sizes, so the two share one system.</p>
+    <div class="ground-demo on-base" style="margin-top:32px;min-height:300px">
+      <svg viewBox="0 0 700 700" data-chip="mesh" aria-label="Mesh variant" role="img" style="width:min(300px,60vw);height:auto"></svg>
+      <span class="ground-tag">Network lockup — agent-to-agent inference around the core</span>
+    </div>
+  </section>
+
+  <section>
+    <p class="eyebrow">Colour</p>
+    <h2>One spot colour, used deliberately.</h2>
+    <div class="swatches">
+      <div class="sw"><div class="chipcolor" style="background:#0A1128;border-bottom:1px solid var(--line)"></div><div class="meta"><div class="name">Base</div><div class="hex">#0A1128</div><div class="role">The ground and the word mark on light.</div></div></div>
+      <div class="sw"><div class="chipcolor" style="background:#F5F7FA"></div><div class="meta"><div class="name">Ice White</div><div class="hex">#F5F7FA</div><div class="role">The ground, and the reversed word mark on Base.</div></div></div>
+      <div class="sw"><div class="chipcolor" style="background:#00B4D8"></div><div class="meta"><div class="name">Accent — the Chip</div><div class="hex">#00B4D8</div><div class="role">The one spot colour. The mark takes it; nothing else does.</div></div></div>
+      <div class="sw"><div class="chipcolor" style="background:#0466C8"></div><div class="meta"><div class="name">Flop Blue</div><div class="hex">#0466C8</div><div class="role">Structural fills and the mesh links.</div></div></div>
+      <div class="sw"><div class="chipcolor" style="background:#32D74B"></div><div class="meta"><div class="name">Electric Green</div><div class="hex">#32D74B</div><div class="role">Live and successful states in product surfaces.</div></div></div>
+      <div class="sw"><div class="chipcolor" style="background:#5C6670"></div><div class="meta"><div class="name">Grey</div><div class="hex">#5C6670</div><div class="role">Secondary text and captions.</div></div></div>
+    </div>
+  </section>
+
+  <footer>
+    <span class="pill">● Ready to submit</span>
+    <p class="prize">Technocore logo competition · <span class="amt">5,000 USDT</span></p>
+    <p>An original mark built entirely from the published Flop brand system — the Chip, the grid, Space Mono, the palette used by role. Prepared as a competition entry for @flop_labs.</p>
+  </footer>
+
+</div>
+
+<script>
+(function(){
+  var CELL=100, GUT=0.10, RX=7, N=7, C=(N-1)>>1;
+  var BLOCK=CELL*(1-GUT), INSET=(CELL-BLOCK)/2;
+  // cells of the octagon-with-aperture, in draw order
+  function cells(){
+    var out=[];
+    for(var r=0;r<N;r++)for(var c=0;c<N;c++){
+      if(Math.min(r,N-1-r)+Math.min(c,N-1-c)<2) continue;   // cut corners -> octagon
+      if(r===C&&c===C) continue;                            // central aperture
+      out.push([r,c]);
+    }
+    return out;
+  }
+  function chip(fill, stagger){
+    var s='', cs=cells();
+    for(var i=0;i<cs.length;i++){
+      var x=(cs[i][1]*CELL+INSET).toFixed(1), y=(cs[i][0]*CELL+INSET).toFixed(1);
+      var st = stagger ? ' style="animation-delay:'+(i*16)+'ms"' : '';
+      s+='<rect x="'+x+'" y="'+y+'" width="'+BLOCK.toFixed(1)+'" height="'+BLOCK.toFixed(1)+'" rx="'+RX+'" fill="'+fill+'"'+st+'/>';
+    }
+    return s;
+  }
+  // hero mark
+  var hero=document.querySelector('.mark');
+  if(hero) hero.innerHTML=chip('#00B4D8', true);
+  // simple chips by data-chip
+  document.querySelectorAll('[data-chip]').forEach(function(svg){
+    var kind=svg.getAttribute('data-chip');
+    if(kind==='chip') svg.innerHTML=chip('#00B4D8',false);
+    else if(kind==='base') svg.innerHTML=chip('#0A1128',false);
+    else if(kind==='construct'){
+      // faint construction grid + chip + aperture ring
+      var g='<g class="gridlines">';
+      for(var i=0;i<=N;i++){var p=(i*CELL).toFixed(0);
+        g+='<line x1="'+p+'" y1="0" x2="'+p+'" y2="700"/><line x1="0" y1="'+p+'" x2="700" y2="'+p+'"/>';}
+      g+='</g>';
+      var ap='<rect class="aperture-mark" x="'+(C*CELL+INSET)+'" y="'+(C*CELL+INSET)+'" width="'+BLOCK.toFixed(1)+'" height="'+BLOCK.toFixed(1)+'" rx="'+RX+'" fill="none" stroke="#32D74B" stroke-width="3" stroke-dasharray="6 7"/>';
+      svg.innerHTML=g+chip('#00B4D8',false)+ap;
+    } else if(kind==='mesh'){
+      // central chip scaled + satellite nodes on facet directions + links
+      var cx=350, cy=350, R=250, node=44;
+      var links='', nodes='';
+      for(var k=0;k<6;k++){
+        var a=(-90 + k*60)*Math.PI/180;
+        var nx=cx+R*Math.cos(a), ny=cy+R*Math.sin(a);
+        links+='<line x1="'+cx+'" y1="'+cy+'" x2="'+nx.toFixed(1)+'" y2="'+ny.toFixed(1)+'" stroke="#0466C8" stroke-width="4"/>';
+        nodes+='<rect x="'+(nx-node/2).toFixed(1)+'" y="'+(ny-node/2).toFixed(1)+'" width="'+node+'" height="'+node+'" rx="6" fill="#00B4D8"/>';
+      }
+      var mid='<g transform="translate(220 220) scale(0.37)">'+chip('#00B4D8',false)+'</g>';
+      svg.innerHTML=links+nodes+mid;
+    }
+  });
+})();
+</script>
