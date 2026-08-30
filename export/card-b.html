@@ -1,0 +1,39 @@
+<meta charset="utf-8">
+<title>card-b</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Inter:wght@400;500;600&display=swap">
+<style>
+  html,body{margin:0;height:100%;background:#0A1128;font-family:'Inter',system-ui,sans-serif}
+  .card{width:100vw;height:100vh;display:flex;flex-direction:column;justify-content:center;gap:5vh;padding:0 8vw;box-sizing:border-box;
+        background:radial-gradient(130% 100% at 78% 20%, #10204a 0%, #0A1128 60%)}
+  .top{display:flex;align-items:center;gap:3.5vw}
+  .top svg{width:14vh;height:14vh;flex:0 0 auto;filter:drop-shadow(0 0 4vh rgba(0,180,216,.25))}
+  .wm{font-family:'Space Mono',monospace;font-weight:700;font-size:6.4vh;letter-spacing:.02em;color:#F5F7FA;line-height:1}
+  .wm .o{color:#00B4D8}
+  .three{display:grid;grid-template-columns:repeat(3,1fr);gap:2.2vw}
+  .b{border:1px solid rgba(245,247,250,.12);border-radius:8px;padding:2.6vh 1.8vw;background:#0e1734}
+  .b .k{font-family:'Space Mono',monospace;font-weight:700;font-size:1.5vh;letter-spacing:.14em;color:#00B4D8;text-transform:uppercase}
+  .b .h{font-family:'Space Mono',monospace;font-weight:700;font-size:2.6vh;color:#F5F7FA;margin:1.2vh 0 .8vh}
+  .b .p{font-size:1.9vh;line-height:1.45;color:#8b95a8}
+  .foot{font-family:'Space Mono',monospace;font-size:1.7vh;letter-spacing:.14em;color:#5C6670;text-transform:uppercase}
+</style>
+<div class="card">
+  <div class="top">
+    <svg viewBox="0 0 700 700" aria-hidden="true"></svg>
+    <div class="wm">TECHN<span class="o">O</span>CORE</div>
+  </div>
+  <div class="three">
+    <div class="b"><div class="k">01 / Communicate</div><div class="h">The grid</div><div class="p">36 modules on one lattice - many agents, one shared fabric.</div></div>
+    <div class="b"><div class="k">02 / Commerce</div><div class="h">The aperture</div><div class="p">The open centre is the exchange. Value passes through the core.</div></div>
+    <div class="b"><div class="k">03 / Memory</div><div class="h">The octagon</div><div class="p">A sealed vault built from the same modules that carry the traffic.</div></div>
+  </div>
+  <div class="foot">The Chip - the unit of agent-to-agent inference - read as a core</div>
+</div>
+<script>
+  var CELL=100,GUT=.10,RX=7,N=7,C=3,B=CELL*(1-GUT),I=(CELL-B)/2,s='';
+  for(var r=0;r<N;r++)for(var c=0;c<N;c++){
+    if(Math.min(r,N-1-r)+Math.min(c,N-1-c)<2)continue; if(r===C&&c===C)continue;
+    s+='<rect x="'+(c*CELL+I).toFixed(1)+'" y="'+(r*CELL+I).toFixed(1)+'" width="'+B.toFixed(1)+'" height="'+B.toFixed(1)+'" rx="'+RX+'" fill="#00B4D8"/>';
+  }
+  document.querySelector('svg').innerHTML=s;
+</script>
